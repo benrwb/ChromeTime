@@ -67,6 +67,7 @@ namespace ChromeTime
         [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
         static extern int GetWindowText(IntPtr hWnd, StringBuilder lpString, int nMaxCount);
 
+
         void t_Tick(object sender, EventArgs e)
         {
             // Prepare database
@@ -76,12 +77,18 @@ namespace ChromeTime
 
             // Get active window & check if it matches
             IntPtr hwnd = GetForegroundWindow();
+            string curWndTitle = "";
             if (hwnd != IntPtr.Zero)
             {
                 var sb = new StringBuilder(256);
                 GetWindowText(hwnd, sb, sb.Capacity);
+                curWndTitle = sb.ToString();
 
-                if (sb.ToString().Contains("Google Chrome"))
+                if (curWndTitle.Contains("Google Chrome") 
+                    && !curWndTitle.Equals("Videostream - Google Chrome")
+                    && !curWndTitle.Equals("Apps - Google Chrome")
+                    && !curWndTitle.Equals("New Tab - Google Chrome")
+                    )
                     database[today]++;
             }
 
@@ -89,6 +96,9 @@ namespace ChromeTime
             var summary = string.Join("\r\n\r\n", database.Select(z => z.Key + "\t" + TimeSpan.FromSeconds(z.Value).ToString()).Reverse());
             if (summary != textBox1.Text)
                 textBox1.Text = summary;
+
+            if (curWndTitle != tbCurWnd.Text)
+                tbCurWnd.Text = curWndTitle;
         }
 
 

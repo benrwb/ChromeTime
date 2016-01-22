@@ -1,9 +1,10 @@
 ﻿<Window x:Class="ChromeTime.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="ChromeTime" Height="96.452" Width="400.523" Closing="Window_Closing">
+        Title="ChromeTime" Height="141.677" Width="400.523" Closing="Window_Closing">
     <Grid>
-        <TextBox x:Name="textBox1" Margin="10" TextWrapping="Wrap" Text="Initialising..." VerticalScrollBarVisibility="Visible"/>
+        <TextBox x:Name="textBox1" Margin="10,58,10,10" TextWrapping="Wrap" Text="Initialising..." VerticalScrollBarVisibility="Visible"/>
+        <TextBox x:Name="tbCurWnd" HorizontalAlignment="Left" Height="43" Margin="10,10,0,0" TextWrapping="Wrap" Text="TextBox" VerticalAlignment="Top" Width="373"/>
 
     </Grid>
 </Window>
