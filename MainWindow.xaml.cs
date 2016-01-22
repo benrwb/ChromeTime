@@ -124,10 +124,18 @@ namespace ChromeTime
         {
             JavaScriptSerializer ser = new JavaScriptSerializer();
             var json = ser.Serialize(database);
-            using (StreamWriter sw = new StreamWriter(GetSettingsFileName()))
+
+            // Save changes to temp file, keep original in case an error occurs whilst saving
+            // (sounds unlikely but has happened and left me with 0KB database file)
+            var filename = GetSettingsFileName();
+            using (StreamWriter sw = new StreamWriter(filename + ".TMP"))
             {
                 sw.Write(json);
             }
+            // If temp file saved successfully then rename
+            File.Delete(filename + ".OLD");
+            File.Move(filename, filename + ".OLD");
+            File.Move(filename + ".TMP", filename);
         }
     }
 }
