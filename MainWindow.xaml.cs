@@ -134,18 +134,22 @@ namespace ChromeTime
         {
             JavaScriptSerializer ser = new JavaScriptSerializer();
             var json = ser.Serialize(database);
-
-            // Save changes to temp file, keep original in case an error occurs whilst saving
-            // (sounds unlikely but has happened and left me with 0KB database file)
             var filename = GetSettingsFileName();
-            using (StreamWriter sw = new StreamWriter(filename + ".TMP"))
+
+            // Many applications which deal with "document-like" data tend to load the
+            // entire document into memory, operate on it, and then write it back out 
+            // to save the changes. The needed atomicity here is that the changes either
+            // are completely applied or not applied at all, as an inconsistent state would
+            // render the file corrupt. A common approach is to write the document to a new
+            // file, then replace the original file with the new one. One method to do this 
+            // is with the ReplaceFile API.
+            // https://msdn.microsoft.com/en-us/library/hh802690%28v=vs.85%29.aspx
+
+            using (StreamWriter sw = new StreamWriter(filename + ".NEW"))
             {
                 sw.Write(json);
             }
-            // If temp file saved successfully then rename
-            File.Delete(filename + ".OLD");
-            File.Move(filename, filename + ".OLD");
-            File.Move(filename + ".TMP", filename);
+            File.Replace(filename + ".NEW", filename, filename + ".OLD");
         }
     }
 }
